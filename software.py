@@ -24,7 +24,7 @@ class store:
         main_Frame.place(x=0, y=0, width=1366, height=768)
 
         left_Frame = Frame(self.root, bd=5, bg="#03D3C0")
-        left_Frame.place(x=0, y=50, width=180, height=768)
+        left_Frame.place(x=0, y=50, width=180, height=718)
 
         # top_Frame = Frame(self.root, bd=5, bg="#03D3C0")
         # top_Frame.place(x=180, y=0, width=1186, height=150)
@@ -44,8 +44,6 @@ class store:
         background=[('pressed', '!disabled', 'black'), ('active', 'white')]
         )
 
-        # style = ttk.Style()
-        # style.configure("BW.TLabel", background="white", foreground="red", padding=0)
 
         self.btndata = ttk.Button(left_Frame, text="Data", style="C.TButton",  command=self.data, cursor="hand2")
         self.btndata.place(x=20, y=200, width=130, height=44)
@@ -83,7 +81,7 @@ class store:
         self.txtproduct = ttk.Entry(data_entry_Frame, font=("arial", 12, "bold"), width=20)
         self.txtproduct.place(x=160, y=30)
 
-        #firstname
+        #Category
         self.lbls_name = Label(data_entry_Frame, text="Category", font=("arial", 12, "bold"), bg="white",fg="black", bd=4)
         self.lbls_name.place(x=450, y=0)
 
@@ -156,12 +154,12 @@ class store:
 
         self.info_table.pack(fill=BOTH, expand=1)
 
-        self.info_table.column("date", width=30)
-        self.info_table.column("product", width=30)
-        self.info_table.column("category", width=30)
-        self.info_table.column("status", width=30)
-        self.info_table.column("qty", width=30)
-        self.info_table.column("amount", width=30)
+        self.info_table.column("date", width=15)
+        self.info_table.column("product", width=100)
+        self.info_table.column("category", width=100)
+        self.info_table.column("status", width=20)
+        self.info_table.column("qty", width=10)
+        self.info_table.column("amount", width=35)
 
         self.info_table.pack(fill=BOTH, expand=1)
         self.info_table.bind("<ButtonRelease-1>")
@@ -192,12 +190,6 @@ class store:
 
 
     
-
-
-        
-
-
-
 
 
 
