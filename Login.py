@@ -66,14 +66,14 @@ class Login:
         self.lbls_username = Label(inner_Frame, text="Username", font=("arial", 18, "bold"), bg="white",fg="#03D3C0", bd=4)
         self.lbls_username.place(x=180, y=80)
 
-        self.txts_username = ttk.Entry(inner_Frame, font=("arial", 18, "bold"), width=24)
+        self.txts_username = ttk.Entry(inner_Frame, font=("arial", 18), width=24)
         self.txts_username.place(x=80, y=120)
 
         #password
         self.lbls_password = Label(inner_Frame, text="Password", font=("arial", 18, "bold"), bg="white",fg="#03D3C0", bd=4)
         self.lbls_password.place(x=180, y=210)
 
-        self.txts_password = ttk.Entry(inner_Frame, show="*", font=("arial", 18, "bold"), width=24)
+        self.txts_password = ttk.Entry(inner_Frame, show="*", font=("arial", 18), width=24)
         self.txts_password.place(x=80, y=250)
 
         style = ttk.Style()
