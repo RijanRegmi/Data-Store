@@ -7,6 +7,8 @@ import os
 import mysql.connector 
 from tkcalendar import DateEntry
 from datetime import datetime
+import random
+
 
 
 
@@ -27,17 +29,15 @@ class store:
         left_Frame = Frame(self.root, bd=5, bg="#03D3C0")
         left_Frame.place(x=0, y=50, width=180, height=718)
 
-        # top_Frame = Frame(self.root, bd=5, bg="#03D3C0")
-        # top_Frame.place(x=180, y=0, width=1186, height=150)
-
-
         lbl_title=Label(self.root, text="RJN STORE",relief=GROOVE, font = ("times new romen",45,"bold"),bg="white",fg="#BA00EC")
         lbl_title.place(x=0,y=0,width=1366,height=50)
 
-        
+        logo_img = Image.open("img/logo.png")
+        logo_img = logo_img.resize((150, 100), Image.LANCZOS)
+        self.logo_img = ImageTk.PhotoImage(logo_img)
+        label_logo_img = Label(left_Frame, bg="#03D3C0", image=self.logo_img)
+        label_logo_img.place(x=10, y=10, width=150, height=100)
 
-        # btn_data = Button(left_Frame, text="Data", bg="white",  cursor="hand2")
-        # btn_data.place(x=10, y=0, width=125, height=35)
 
         style = ttk.Style()
         style.map("C.TButton",
@@ -55,12 +55,22 @@ class store:
         self.btndata = ttk.Button(left_Frame, text="Data", takefocus=False,  style="C.TButton", command=self.data, cursor="hand2")
         self.btndata.place(x=20, y=200, width=130, height=44)
 
+        self.btnbilling = ttk.Button(left_Frame, text="Billing", takefocus=False,  style="C.TButton", command=self.billing, cursor="hand2")
+        self.btnbilling.place(x=20, y=300, width=130, height=44)
+
         dataimg = Image.open("img/data.png")
         dataimg = dataimg.resize((40, 35))
         self.photodataimg = ImageTk.PhotoImage(dataimg)
-
         dataimg = Label(self.btndata, image=self.photodataimg, bg="white")
         dataimg.place(x=5, y=5, width=40, height=35)
+
+        billingimg = Image.open("img/billing.png")
+        billingimg = billingimg.resize((35, 35))
+        self.photobillingimg = ImageTk.PhotoImage(billingimg)
+        billingimg = Label(self.btnbilling, image=self.photobillingimg, bg="white")
+        billingimg.place(x=5, y=5, width=35, height=35)
+
+        
         self.data()
         self.fetch_data()
 
@@ -357,6 +367,243 @@ class store:
                 self.info_table.insert("", END, values=row)
             conn.commit()
         conn.close()
+
+
+
+    # ==================================================================================Billing================================================================
+    def billing(self):
+        # ======================Variables======================
+        self.Date = StringVar()
+        self.Name = StringVar()
+        self.Product = StringVar()
+        self.Qty = IntVar()
+        self.Rate = IntVar()
+        self.Amount = IntVar()
+        self.TotalAmount = DoubleVar()
+        self.search_bill = StringVar()
+        self.bill_no=StringVar()
+        z=random.randint(1000,9999)
+        self.bill_no.set(z)
+
+        # billing frame
+        Billing_Frame = Frame(self.root, bd=5, relief=GROOVE, bg="white")
+        Billing_Frame.place(x=180,y=50,width=1186,height=718)
+
+        billing_details_Frame=LabelFrame(Billing_Frame,text="Details",font = ("times new romen",12,"bold"),bg="#03D3C0",fg="#BA00EC")
+        billing_details_Frame.place(x=40,y=0,width=600,height=500)
+
+
+        #date
+        self.lblDate = Label(billing_details_Frame, text="Date", font=("arial", 16, "bold"), bg="#03D3C0", fg="Black", bd=4)
+        self.lblDate.place(x=10, y=100)
+
+        self.txtDate = DateEntry(billing_details_Frame, selectmode="day", cursor="hand2", state="readonly", font=("Arial", 15, "bold"), textvariable=self.date, date_pattern="yyyy-mm-dd", width=25)
+        self.txtDate.place(x=150, y=100)
+
+    
+        # Name
+        self.lblName = Label(billing_details_Frame, text="Name", font=("arial", 16, "bold"), bg="#03D3C0", fg="black", bd=4)
+        self.lblName.place(x=10, y=150)
+
+        self.txtName = ttk.Entry(billing_details_Frame, textvariable=self.Name, font=("arial", 16, "bold"), width=24)
+        self.txtName.place(x=150, y=150)
+       
+
+        # Product
+        self.lblProduct = Label(billing_details_Frame, text="Product", font=("arial", 16, "bold"), bg="#03D3C0", fg="black",
+                                bd=4)
+        self.lblProduct.place(x=10, y=200)
+
+        self.txtProduct = ttk.Entry(billing_details_Frame, textvariable=self.Product, font=("arial", 16, "bold"), width=24)
+        self.txtProduct.place(x=150, y=200)
+
+        # Qty
+        self.lblQty = Label(billing_details_Frame, text="Qty", font=("arial", 16, "bold"), bg="#03D3C0", fg="black", bd=4)
+        self.lblQty.place(x=10, y=250)
+
+        self.txtQty = ttk.Entry(billing_details_Frame, textvariable=self.Qty, font=("arial", 16, "bold"), width=24)
+        self.txtQty.place(x=150, y=250)
+
+        # Rate
+        self.lblRate = Label(billing_details_Frame, text="Rate", font=("arial", 16, "bold"), bg="#03D3C0", fg="black", bd=4)
+        self.lblRate.place(x=10, y=300)
+
+        self.txtRate = ttk.Entry(billing_details_Frame, textvariable=self.Rate, font=("arial", 16, "bold"), width=24)
+        self.txtRate.place(x=150, y=300)
+
+        # Amount
+        self.lblAmount = Label(billing_details_Frame, text="Amount", font=("arial", 16, "bold"), bg="#03D3C0", fg="black",
+                               bd=4)
+        self.lblAmount.place(x=10, y=350)
+
+        self.txtAmount = ttk.Entry(billing_details_Frame, textvariable=self.Amount, font=("arial", 16, "bold"), width=24)
+        self.txtAmount.place(x=150, y=350)
+
+        billing_button_Frame=LabelFrame(Billing_Frame,text="Bill counter",font = ("times new romen",12,"bold"),bg="#03D3C0",fg="#BA00EC")
+        billing_button_Frame.place(x=0,y=600,width=1175,height=100)
+
+        # button
+        # add
+        self.btnadd = Button(billing_button_Frame, text="Add", height=1, font=('arial', 15, 'bold'), bg="#00C666",
+                             fg="#ffffff", cursor="hand2", command=self.add)
+        self.btnadd.place(x=490, y=5, width=150, height=60)
+
+        # clear
+        self.btngen_bill = Button(billing_button_Frame, text="Generate Bill", command=self.gen_bill, height=1,
+                                  font=('arial', 15, 'bold'), bg="#00C666", fg="#ffffff", width=10, cursor="hand2")
+        self.btngen_bill.place(x=660, y=5, width=150, height=60)
+
+        # save
+        self.btnsave = Button(billing_button_Frame, text="Save", height=1, font=('arial', 15, 'bold'), bg="#00C666",
+                              fg="#ffffff", width=10, cursor="hand2", command=self.save)
+        self.btnsave.place(x=830, y=5, width=150, height=60)
+
+        # clear
+        self.btnclear = Button(billing_button_Frame, text="Clear", command=self.clear, height=1, font=('arial', 15, 'bold'),
+                               bg="#00C666", fg="#ffffff", width=10, cursor="hand2")
+        self.btnclear.place(x=1000, y=5, width=150, height=60)
+
+        # search frame
+        Search_Frame = Frame(Billing_Frame, bd=2, bg="white")
+        Search_Frame.place(x=710, y=40, width=400, height=40)
+
+        self.lblBill = Label(Search_Frame, text="Date", font=("arial", 14, "bold"), width=7, bg="#4f5c8b",
+                             fg="white")
+        self.lblBill.grid(row=0, column=0, sticky=W, padx=1)
+
+        self.txt_Entry_Search = ttk.Entry(Search_Frame, textvariable=self.search_bill, font=('arial', 14, 'bold'), width=18)
+        self.txt_Entry_Search.grid(row=0, column=1, sticky=W, padx=2)
+
+        self.btnSearch = Button(Search_Frame,command=self.find_bill, text="Search", font=('arial', 10, 'bold'), bg="#4f5c8b", fg="white",
+                                width=10, cursor="hand2")
+        self.btnSearch.grid(row=0, column=2)
+
+        # bill frame
+        BillLabelFrame = LabelFrame(Billing_Frame, text="Info Aria", font=("times new romen", 12, "bold"), bg="white",
+                                    fg="#b90508")
+        BillLabelFrame.place(x=700, y=80, width=420, height=440)
+
+        scroll_y = Scrollbar(BillLabelFrame, orient=VERTICAL)
+        self.textarea = Text(BillLabelFrame, yscrollcommand=scroll_y.set, font=("times new romen", 12, "bold"),
+                             bg="white", fg="#b90508")
+        scroll_y.pack(side=RIGHT, fill=Y)
+        scroll_y.config(command=self.textarea.yview)
+        self.textarea.pack(fill=BOTH, expand=1)
+
+        # total amount
+        self.lblTotal = Label(billing_button_Frame, text="Total Amount", font=("arial", 16, "bold"), bg="#03D3C0", bd=4)
+        self.lblTotal.place(x=10, y=20)
+
+        self.txtTotal = ttk.Entry(billing_button_Frame, textvariable=self.TotalAmount, font=("arial", 16, "bold"), width=24)
+        self.txtTotal.place(x=170, y=20)
+        self.Bill()
+
+
+
+    def InsertDAta(self):
+        Date = self.txtDate.get()
+        Name = self.txtName.get()
+        Product = self.txtProduct.get()
+        Qty = self.txtQty.get()
+        Rate = self.txtRate.get()
+        Amount = self.txtAmount.get()
+        Total_amount = self.txtTotal.get()
+
+
+
+        # insert_query="INSERT INTO 'rpt_billing'('Date','Name','Product','Qty','Rate','Amount','Total_amount') VALUES (%s,%s,%s,%s,%s,%s,%s)"
+        # vals=(Date,Name,Product,Qty,Rate,Amount,Total_amount)
+        # c.exicute(insert_query,vals)
+        # connection.commit()
+
+
+        self.Bill()
+
+        self.l = []
+        self.k = []
+
+    # functions
+    def add(self):
+        self.n = self.Rate.get()
+        self.o = self.Qty.get()
+        self.m = self.o * self.n
+        self.l.append(self.m)
+
+        self.a = self.n * self.o
+        self.k.append(self.a)
+
+        product = {
+                "name": self.Product.get(),
+                "qty": self.Qty.get(),
+                "rate": self.Rate.get(),
+                "amount": self.a
+            }
+        self.products_added.append(product)
+       
+        if self.Name.get() == "" or self.Product.get() == "" or self.Qty.get() == "" or self.Rate.get() == "" or self.Amount.get() == "":
+            messagebox.showerror("Error", "Enter All detail")
+        elif self.Date.get() == "":
+            messagebox.showerror("Error", "Enter Date")
+        else:
+            self.textarea.insert(END, f"\n {self.Product.get()}\t\t{self.Qty.get()}\t{self.Rate.get()}\t{self.a}")
+            self.TotalAmount.set(round(sum(self.l),2))
+
+
+    def gen_bill(self):
+        if not self.textarea.get(1.0, END).isspace():
+            self.Bill()
+            for product in self.products_added:
+                self.textarea.insert(END, f"{product['name']}\t\t{product['qty']}\t{product['rate']}\t{product['amount']}\n")
+           
+            self.textarea.insert(END, f"\n===========================================")
+            self.textarea.insert(END, f"\nTotal\t\t{self.TotalAmount.get():.2f}\n")
+            self.textarea.insert(END, f"===========================================\n")
+
+    def save(self):
+        op = messagebox.askyesno("Save Bill", "Do you want to save the Bill?")
+        if op > 0:
+            self.bill_data = self.textarea.get(1.0, END)
+            f1 =open(f'Bill/'f'{str(self.Name.get())},{str(self.bill_no.get())}''.txt','w')
+            f1.write(self.bill_data)
+            op=messagebox.showinfo("Saved", f"Date:{self.bill_no.get()} saved successfully")
+            f1.close()
+
+    def find_bill(self):
+        found="no"
+        for i in os.listdir("Bill/"):
+            if i.split('.')[0]==self.search_bill.get():
+                f1=open(f'Bill/{i}','r')
+                self.textarea.delete(1.0,END)
+                for d in f1:
+                    self.textarea.insert(END,d)
+                f1.close()
+                found="yes"
+        if found=='no':
+            messagebox.showerror("Error","Invalid Date")
+
+    def clear(self):
+        self.textarea.delete(1.0, END)
+        self.Date.set("")
+        self.Name.set("")
+        self.Product.set("")
+        self.Qty.set(0)
+        self.Rate.set(0)
+        self.Amount.set(0)
+        self.search_bill.set("")
+        self.TotalAmount.set(0.0)
+        self.Bill()
+        x=random.randint(1000,9999)
+        self.bill_no.set(str(x))
+
+    def Bill(self):
+        self.textarea.delete(1.0,END)
+        self.textarea.insert(END, "\t Welcome to Regmi Plastic Traders\n")
+        self.textarea.insert(END,f"\n\t\t\t\t Bill No.:{self.bill_no.get()}")
+        self.textarea.insert(END, f"\n Date:{self.Date.get()}")
+        self.textarea.insert(END, f"\n Name:{self.Name.get()}")
+        self.textarea.insert(END, "\n===========================================")
+        self.textarea.insert(END, f"\nProduct\t\tQty\tRate\tAmount")
+        self.textarea.insert(END, "\n===========================================\n")
 
 
 

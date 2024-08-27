@@ -53,6 +53,12 @@ class Login:
         inner_Frame = Frame(left_Frame, bd=5, bg="#ffffff")
         inner_Frame.place(x=500, y=5, width=465, height=597)
 
+        logo_img = Image.open("img/logo.png")
+        logo_img = logo_img.resize((450, 380), Image.LANCZOS)
+        self.logo_img = ImageTk.PhotoImage(logo_img)
+        label_logo_img = Label(left_Frame, bg="#03D3C0", image=self.logo_img)
+        label_logo_img.place(x=30, y=100, width=450, height=380)
+
 
         lbl_title=Label(self.root, text="RJN STORE",relief=GROOVE, font = ("times new romen",45,"bold"),bg="white",fg="#BA00EC")
         lbl_title.place(x=0,y=0,width=1366,height=50)
