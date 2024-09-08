@@ -18,6 +18,7 @@ class store:
         self.root = root
         self.root.geometry("1366x768+280+95")
         self.root.title("Store")
+        self.l = []
 
 
     # Front Page
@@ -390,14 +391,14 @@ class store:
         Billing_Frame.place(x=180,y=50,width=1186,height=718)
 
         billing_details_Frame=LabelFrame(Billing_Frame,text="Details",font = ("times new romen",12,"bold"),bg="#03D3C0",fg="#BA00EC")
-        billing_details_Frame.place(x=40,y=0,width=600,height=500)
+        billing_details_Frame.place(x=40,y=50,width=600,height=500)
 
 
         #date
         self.lblDate = Label(billing_details_Frame, text="Date", font=("arial", 16, "bold"), bg="#03D3C0", fg="Black", bd=4)
         self.lblDate.place(x=10, y=100)
 
-        self.txtDate = DateEntry(billing_details_Frame, selectmode="day", cursor="hand2", state="readonly", font=("Arial", 15, "bold"), textvariable=self.date, date_pattern="yyyy-mm-dd", width=25)
+        self.txtDate = DateEntry(billing_details_Frame, selectmode="day", cursor="hand2", state="readonly", font=("Arial", 15, "bold"), textvariable=self.Date, date_pattern="yyyy-mm-dd", width=25)
         self.txtDate.place(x=150, y=100)
 
     
@@ -496,11 +497,17 @@ class store:
 
         self.txtTotal = ttk.Entry(billing_button_Frame, textvariable=self.TotalAmount, font=("arial", 16, "bold"), width=24)
         self.txtTotal.place(x=170, y=20)
+
+        # bill no
+        
+        self.txtTotal = ttk.Entry(billing_button_Frame, textvariable=self.bill_no, font=("arial", 16, "bold"), width=24)
+        self.txtTotal.place(x=1170, y=20)
+
         self.Bill()
 
 
 
-    def InsertDAta(self):
+    def InsertBillingData(self):
         Date = self.txtDate.get()
         Name = self.txtName.get()
         Product = self.txtProduct.get()
@@ -508,56 +515,63 @@ class store:
         Rate = self.txtRate.get()
         Amount = self.txtAmount.get()
         Total_amount = self.txtTotal.get()
+        bill_no = self.bill_no
 
+        try:
+            Qty = float(Qty)
+            Rate = float(Rate)
+            Total_amount = Qty * Rate
+        except ValueError as e:
+            messagebox.showerror("Input Error", f"Error: {e}")
+            return
 
+        if Date == "" or Name == "" or Product == "" or Qty == "" or Rate == "" or Amount == "" or Total_amount == "" or bill_no == "":
+            messagebox.showinfo("Insert Status", "All Fields are required")
+        else:
+            con = mysql.connector.connect(host="localhost", user="root", password="root", database="DataSoftware")
+            cursor = con.cursor()
+            cursor.execute("insert into billing ('date','name','product','qty','rate','amount','total_amount','bill_no') values (%s,%s,%s,%s,%s,%s,%s)", 
+                        (Date, Name, Product, Qty, Rate, Amount, Total_amount))
+            con.commit()
 
-        # insert_query="INSERT INTO 'rpt_billing'('Date','Name','Product','Qty','Rate','Amount','Total_amount') VALUES (%s,%s,%s,%s,%s,%s,%s)"
-        # vals=(Date,Name,Product,Qty,Rate,Amount,Total_amount)
-        # c.exicute(insert_query,vals)
-        # connection.commit()
+            messagebox.showinfo("Insert Status", "Data stored")
+            con.close()
 
 
         self.Bill()
 
         self.l = []
         self.k = []
+        
 
     # functions
     def add(self):
-        self.n = self.Rate.get()
-        self.o = self.Qty.get()
-        self.m = self.o * self.n
-        self.l.append(self.m)
-
-        self.a = self.n * self.o
-        self.k.append(self.a)
-
-        product = {
-                "name": self.Product.get(),
-                "qty": self.Qty.get(),
-                "rate": self.Rate.get(),
-                "amount": self.a
-            }
-        self.products_added.append(product)
-       
-        if self.Name.get() == "" or self.Product.get() == "" or self.Qty.get() == "" or self.Rate.get() == "" or self.Amount.get() == "":
-            messagebox.showerror("Error", "Enter All detail")
-        elif self.Date.get() == "":
-            messagebox.showerror("Error", "Enter Date")
-        else:
-            self.textarea.insert(END, f"\n {self.Product.get()}\t\t{self.Qty.get()}\t{self.Rate.get()}\t{self.a}")
-            self.TotalAmount.set(round(sum(self.l),2))
-
+        try:
+            Rate = float(self.Rate.get())
+            Qty = float(self.Qty.get())
+            self.Amount = Qty * Rate
+            if not self.Name.get() or not self.Product.get() or not self.Qty.get() or not self.Rate.get():
+                messagebox.showerror("Error", "Enter all details")
+                return
+            self.l.append(self.Amount)
+            self.textarea.insert(END, f"\n {self.Product.get()}\t\t{Qty}\t{Rate}\t{self.Amount}")
+            self.TotalAmount.set(round(sum(self.l), 2))
+            
+        except ValueError as e:
+            messagebox.showerror("Input Error", f"Error: {e}")
+            return
 
     def gen_bill(self):
-        if not self.textarea.get(1.0, END).isspace():
-            self.Bill()
-            for product in self.products_added:
-                self.textarea.insert(END, f"{product['name']}\t\t{product['qty']}\t{product['rate']}\t{product['amount']}\n")
-           
-            self.textarea.insert(END, f"\n===========================================")
-            self.textarea.insert(END, f"\nTotal\t\t{self.TotalAmount.get():.2f}\n")
-            self.textarea.insert(END, f"===========================================\n")
+            if self.Product.get()=="":
+                messagebox.showerror("Error","Please Add Product")
+            else:
+                text=self.textarea.get(10.0,(10.0+float(len(self.l))))
+                self.Bill()
+                self.textarea.insert(END,text)
+                # self.textarea.insert(END, f"{self.Product}\t\t{self.Qty}\t{self.Rate}\t{self.Amount}\n")
+                self.textarea.insert(END, f"\n===========================================")
+                self.textarea.insert(END, f"\nTotal\t\t{self.TotalAmount.get():.2f}\n")
+                self.textarea.insert(END, f"===========================================\n")
 
     def save(self):
         op = messagebox.askyesno("Save Bill", "Do you want to save the Bill?")
