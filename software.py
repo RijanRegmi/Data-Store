@@ -377,9 +377,9 @@ class store:
         self.Date = StringVar()
         self.Name = StringVar()
         self.Product = StringVar()
-        self.Qty = IntVar()
-        self.Rate = IntVar()
-        self.Amount = IntVar()
+        self.Qty = DoubleVar()
+        self.Rate = DoubleVar()
+        self.Amount = DoubleVar()
         self.TotalAmount = DoubleVar()
         self.search_bill = StringVar()
         self.bill_no=StringVar()
@@ -432,14 +432,8 @@ class store:
         self.txtRate = ttk.Entry(billing_details_Frame, textvariable=self.Rate, font=("arial", 16, "bold"), width=24)
         self.txtRate.place(x=150, y=300)
 
-        # Amount
-        self.lblAmount = Label(billing_details_Frame, text="Amount", font=("arial", 16, "bold"), bg="#03D3C0", fg="black",
-                               bd=4)
-        self.lblAmount.place(x=10, y=350)
-
-        self.txtAmount = ttk.Entry(billing_details_Frame, textvariable=self.Amount, font=("arial", 16, "bold"), width=24)
-        self.txtAmount.place(x=150, y=350)
-
+        
+        #Billing Frame
         billing_button_Frame=LabelFrame(Billing_Frame,text="Bill counter",font = ("times new romen",12,"bold"),bg="#03D3C0",fg="#BA00EC")
         billing_button_Frame.place(x=0,y=600,width=1175,height=100)
 
@@ -491,17 +485,23 @@ class store:
         scroll_y.config(command=self.textarea.yview)
         self.textarea.pack(fill=BOTH, expand=1)
 
+        # Amount
+        self.lblAmount = Label(billing_button_Frame, text="Amount", font=("arial", 16, "bold"), bg="#03D3C0", fg="black",bd=4)
+        self.lblAmount.place(x=10, y=0)
+
+        self.txtAmount = ttk.Entry(billing_button_Frame, textvariable=self.Amount, font=("arial", 16, "bold"), width=24)
+        self.txtAmount.place(x=170, y=0)
+
         # total amount
         self.lblTotal = Label(billing_button_Frame, text="Total Amount", font=("arial", 16, "bold"), bg="#03D3C0", bd=4)
-        self.lblTotal.place(x=10, y=20)
+        self.lblTotal.place(x=10, y=40)
 
-        self.txtTotal = ttk.Entry(billing_button_Frame, textvariable=self.TotalAmount, font=("arial", 16, "bold"), width=24)
-        self.txtTotal.place(x=170, y=20)
+        self.txtTotal = ttk.Entry(billing_button_Frame, state="readonly", textvariable=self.TotalAmount, font=("arial", 16, "bold"), width=24)
+        self.txtTotal.place(x=170, y=40)
 
         # bill no
-        
         self.txtTotal = ttk.Entry(billing_button_Frame, textvariable=self.bill_no, font=("arial", 16, "bold"), width=24)
-        self.txtTotal.place(x=1170, y=20)
+        self.txtTotal.place(x=170, y=1120)
 
         self.Bill()
 
@@ -549,13 +549,14 @@ class store:
         try:
             Rate = float(self.Rate.get())
             Qty = float(self.Qty.get())
-            self.Amount = Qty * Rate
+            self.a = Qty * Rate
             if not self.Name.get() or not self.Product.get() or not self.Qty.get() or not self.Rate.get():
                 messagebox.showerror("Error", "Enter all details")
                 return
-            self.l.append(self.Amount)
-            self.textarea.insert(END, f"\n {self.Product.get()}\t\t{Qty}\t{Rate}\t{self.Amount}")
+            self.l.append(self.a)
+            self.textarea.insert(END, f"\n {self.Product.get()}\t\t{Qty}\t{Rate}\t{self.a}")
             self.TotalAmount.set(round(sum(self.l), 2))
+            self.Amount.set(self.a)
             
         except ValueError as e:
             messagebox.showerror("Input Error", f"Error: {e}")
@@ -570,7 +571,7 @@ class store:
                 self.textarea.insert(END,text)
                 # self.textarea.insert(END, f"{self.Product}\t\t{self.Qty}\t{self.Rate}\t{self.Amount}\n")
                 self.textarea.insert(END, f"\n===========================================")
-                self.textarea.insert(END, f"\nTotal\t\t{self.TotalAmount.get():.2f}\n")
+                self.textarea.insert(END, f"\nTotal\t\t\t\t{self.TotalAmount.get():.2f}\n")
                 self.textarea.insert(END, f"===========================================\n")
 
     def save(self):
@@ -625,9 +626,9 @@ class store:
 
 
 
-if __name__ == "__main__":
-    root = Tk()
-    obj = store(root)
-    obj.window()
-    root.mainloop()
+# if __name__ == "__main__":
+#     root = Tk()
+#     obj = store(root)
+#     obj.window()
+#     root.mainloop()
 
