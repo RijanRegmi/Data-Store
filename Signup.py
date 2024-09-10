@@ -129,8 +129,8 @@ class Signup:
 
 
 
-if __name__ == "__main__":
-    root = Tk()
-    obj = Signup(root)
-    obj.signup()
-    root.mainloop()
+# if __name__ == "__main__":
+#     root = Tk()
+#     obj = Signup(root)
+#     obj.signup()
+#     root.mainloop()
