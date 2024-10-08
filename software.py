@@ -271,8 +271,7 @@ class store:
             rate = float(rate)
             amount = qty * rate
         except ValueError as e:
-            messagebox.showerror("Input Error", f"Error: {e}")
-            return
+            return messagebox.showerror("Input Error", f"Error: {e}")
 
         if date == "" or productID == "" or product == "" or category == "" or status == "" or qty == "" or rate == "":
             messagebox.showinfo("Insert Status", "All Fields are required")
@@ -626,9 +625,9 @@ class store:
 
 
 
-# if __name__ == "__main__":
-#     root = Tk()
-#     obj = store(root)
-#     obj.window()
-#     root.mainloop()
+if __name__ == "__main__":
+    root = Tk()
+    obj = store(root)
+    obj.window()
+    root.mainloop()
 
